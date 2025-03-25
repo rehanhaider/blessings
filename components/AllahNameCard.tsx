@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import { AllahName } from '@/constants/AllahNames';
@@ -11,79 +11,62 @@ interface AllahNameCardProps {
 
 export function AllahNameCard({ name }: AllahNameCardProps) {
   const colorScheme = useColorScheme() ?? 'light';
+  const isDark = colorScheme === 'dark';
   
-  // Card colors based on theme
-  const cardBackground = colorScheme === 'light' 
-    ? '#ffffff' 
-    : '#1e2a32';
-  
-  const borderColor = colorScheme === 'light' 
-    ? 'rgba(0, 0, 0, 0.08)' 
-    : 'rgba(255, 255, 255, 0.1)';
-  
-  const arabicColor = colorScheme === 'light'
-    ? '#333333'
-    : '#ffffff';
+  // Theme colors
+  const theme = {
+    accent: isDark ? '#2c8463' : '#1F6E59',
+    accentLight: isDark ? 'rgba(44, 132, 99, 0.1)' : 'rgba(31, 110, 89, 0.05)',
+    text: isDark ? '#E9ECEF' : '#212529',
+    textSecondary: isDark ? '#ADB5BD' : '#6C757D',
+    arabicColor: isDark ? '#FFFFFF' : '#333333',
+  };
 
   return (
-    <View style={styles.cardShadowContainer}>
-      <ThemedView 
-        style={[
-          styles.container, 
-          { 
-            backgroundColor: cardBackground, 
-            borderColor: borderColor 
-          }
-        ]}>
-        <View style={styles.arabicContainer}>
-          <ThemedText style={[styles.arabic, { color: arabicColor }]}>{name.arabic}</ThemedText>
-        </View>
-        <ThemedText style={styles.transliteration}>{name.transliteration}</ThemedText>
-        <ThemedText style={styles.meaning}>{name.meaning}</ThemedText>
-      </ThemedView>
+    <View style={styles.cardContainer}>
+      <Text style={[styles.arabic, {color: theme.arabicColor}]}>
+        {name.arabic}
+      </Text>
+      
+      <ThemedText style={[styles.transliteration, {color: theme.accent}]}>
+        {name.transliteration}
+      </ThemedText>
+      
+      <View style={[styles.meaningWrapper, {backgroundColor: theme.accentLight}]}>
+        <ThemedText style={[styles.meaning, {color: theme.textSecondary}]}>
+          {name.meaning}
+        </ThemedText>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  cardShadowContainer: {
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 5,
-    marginBottom: 8,
-  },
-  container: {
-    alignItems: 'center',
-    padding: 24,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  arabicContainer: {
-    minHeight: 60,
-    justifyContent: 'center',
-    marginBottom: 12,
+  cardContainer: {
     width: '100%',
+    alignItems: 'center',
+    paddingVertical: 10,
   },
   arabic: {
-    fontSize: 38,
+    fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    lineHeight: 60,
-    includeFontPadding: false,
-    textAlignVertical: 'center',
+    marginVertical: 10,
   },
   transliteration: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '600',
-    marginBottom: 10,
+    marginBottom: 8,
     textAlign: 'center',
   },
+  meaningWrapper: {
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 30,
+  },
   meaning: {
-    fontSize: 18,
+    fontSize: 15,
+    fontWeight: '500',
     textAlign: 'center',
-    opacity: 0.7,
   },
 }); 
