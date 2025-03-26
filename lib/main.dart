@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'data/allah_names.dart';
 import 'widgets/allah_name_card.dart';
+import 'widgets/custom_app_bar.dart';
 import 'screens/all_names_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Force black status bar with white text/icons
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.black,
+      systemNavigationBarColor: Colors.black,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ),
+  );
   runApp(const MyApp());
 }
 
@@ -12,6 +24,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Force black status bar on app startup
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.black,
+        systemNavigationBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+    );
+
     return MaterialApp(
       title: 'Blessings',
       theme: ThemeData(
@@ -20,6 +42,15 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.black,
+            systemNavigationBarColor: Colors.black,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
+          ),
+        ),
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -27,6 +58,15 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.black,
+            systemNavigationBarColor: Colors.black,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
+          ),
+        ),
       ),
       themeMode: ThemeMode.system,
       home: const MainScreen(),
@@ -99,33 +139,19 @@ class _NamesPageState extends State<NamesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 4,
-        centerTitle: true,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.2,
-            color: Theme.of(context).colorScheme.primary,
-            shadows: [
-              Shadow(
-                blurRadius: 2.0,
-                color: Colors.black.withOpacity(0.3),
-                offset: const Offset(1, 1),
-              ),
-            ],
-          ),
-        ),
-      ),
+      extendBodyBehindAppBar: false,
+      appBar: CustomAppBar(title: widget.title),
       body: RefreshIndicator(
         onRefresh: () async {
           _refreshNames();
         },
         child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.only(
+            top: kToolbarHeight + MediaQuery.of(context).padding.top + 24,
+            bottom: 16,
+            left: 16,
+            right: 16,
+          ),
           children: [
             for (final name in _displayedNames) AllahNameCard(name: name),
             Padding(
@@ -137,7 +163,7 @@ class _NamesPageState extends State<NamesPage> {
                   fontStyle: FontStyle.italic,
                   color: Theme.of(
                     context,
-                  ).colorScheme.onSurface.withOpacity(0.6),
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ),

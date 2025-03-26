@@ -1,43 +1,34 @@
 import 'package:flutter/material.dart';
 import '../data/allah_names.dart';
 import '../widgets/allah_name_card.dart';
+import '../widgets/custom_app_bar.dart';
 
 class AllNamesScreen extends StatelessWidget {
-  const AllNamesScreen({Key? key}) : super(key: key);
+  const AllNamesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get all names sorted alphabetically by transliteration
+    // Get all 99 names sorted alphabetically by transliteration
     final allNames = [...AllahNamesData.names];
     allNames.sort((a, b) => a.transliteration.compareTo(b.transliteration));
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 4,
-        centerTitle: true,
-        title: Text(
-          'All Names of Allah',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.2,
-            color: Theme.of(context).colorScheme.primary,
-            shadows: [
-              Shadow(
-                blurRadius: 2.0,
-                color: Colors.black.withOpacity(0.3),
-                offset: const Offset(1, 1),
-              ),
-            ],
-          ),
-        ),
-      ),
+      extendBodyBehindAppBar: false,
+      appBar: CustomAppBar(title: '99 Attributes of Allah'),
       body: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.only(
+          top: kToolbarHeight + MediaQuery.of(context).padding.top + 24,
+          bottom: 16,
+          left: 16,
+          right: 16,
+        ),
         itemCount: allNames.length,
         itemBuilder: (context, index) {
-          return AllahNameCard(name: allNames[index]);
+          return AllahNameCard(
+            name: allNames[index],
+            showIndex: true,
+            index: index + 1,
+          );
         },
       ),
     );
