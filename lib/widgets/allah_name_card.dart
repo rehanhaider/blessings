@@ -3,12 +3,18 @@ import '../data/allah_names.dart';
 
 class AllahNameCard extends StatelessWidget {
   final AllahName name;
+  final bool showIndex;
+  final int index;
 
-  const AllahNameCard({Key? key, required this.name}) : super(key: key);
+  const AllahNameCard({
+    super.key,
+    required this.name,
+    this.showIndex = false,
+    this.index = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
@@ -18,6 +24,27 @@ class AllahNameCard extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            if (showIndex)
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '$index',
+                      style: TextStyle(
+                        color: colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             Text(
               name.arabic,
               style: TextStyle(
@@ -43,7 +70,7 @@ class AllahNameCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontStyle: FontStyle.italic,
-                color: colorScheme.onSurface.withOpacity(0.8),
+                color: colorScheme.onSurface.withValues(alpha: 0.8),
               ),
               textAlign: TextAlign.center,
             ),
